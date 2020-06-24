@@ -9,14 +9,28 @@ class LoadFactOperator(BaseOperator):
     @apply_defaults
     def __init__(self,
                  redshift_conn_id,
+                 schema,
+                 table,
                  query,
                  truncate_table,
                  *args, **kwargs):
 
         super(LoadFactOperator, self).__init__(*args, **kwargs)
         self.redshift_conn_id = redshift_conn_id
+        self.schema = schema
+        self.table = table
         self.query = query
         self.truncate_table = truncate_table
 
     def execute(self, context):
-        self.log.info('LoadFactOperator not implemented yet')
+        redshift = PostgresHook(postgres_conn_id=self.redshift_conn_id)
+
+        if self.truncate_table == 1:
+            self.log.info('Cleaning table {}.{}...'.format(self.schema, self.table))
+            truncate_table_sql = 'TRUNCATE TABLE {}.{};'.format(self.schema, self.table)
+            redshift.run(truncate_table_sql)
+
+        insert_query = 'INSERT INTO {}.{} {}'.format(self.schema, self.table, self.query)
+
+        self.log.info('Loading table {}.{}...'.format(self.schema, self.table))
+        redshift.run(insert_query)
