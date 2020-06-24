@@ -8,7 +8,7 @@ from helpers import SqlQueries
 
 default_args = {
     'owner': 'udacity',
-    'start_date': datetime(2020, 6, 23),
+    'start_date': datetime(2020, 6, 24),
     'depends_on_past': False,
     'retries': 3,
     'retry_delay': timedelta(minutes=5),
@@ -17,7 +17,7 @@ default_args = {
 }
 
 dag = DAG(
-    'dag_udacity',
+    'dag-nanodegree-project5',
     default_args=default_args,
     description='Load and transform data in Redshift with Airflow',
     schedule_interval='@once'
