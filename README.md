@@ -28,7 +28,7 @@ The star schema was created following the same structure of [Sparkify - Project 
 
 ## Redshift Cluster
 
-Log into you AWS Account and go to Amazon Redshift service page. Create a new cluster with the size that you want and give it a identifier.
+Log into your AWS Account and go to Amazon Redshift service page. Create a new cluster with the size that you want and give it a identifier.
 
 Set a database name, a master user and password. Save it, you'll need to configure your Redshift connection with, on Airflow.
 
