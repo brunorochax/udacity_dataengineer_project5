@@ -20,5 +20,16 @@ class DataQualityOperator(BaseOperator):
 
     def execute(self, context):
         redshift = PostgresHook(postgres_conn_id=self.redshift_conn_id)
+        query_check = 'SELECT COUNT(*) FROM {};'
 
-        self.log.info('DataQualityOperator not implemented yet')
+        self.log.info('Starting data quality check...')
+
+        for table in self.tables:
+            self.log.info(f'Checking table {table}...')
+            rows = redshift.get_records(query_check.format(table))
+            rows_count = 0 if rows[0][0] is None else rows[0][0]
+
+            if len(rows) < 1 or rows_count < self.rows_to_be_valid:
+                raise ValueError(f'Data quality failed, table {table} has no rows.')
+
+        self.log.info('All table have been validated.')
